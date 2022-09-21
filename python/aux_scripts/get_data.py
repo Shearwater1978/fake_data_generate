@@ -45,7 +45,7 @@ def generate_bulk(count):
         person[i] = {}
         for k, v in values_type.items():
             key = str(k)
-            print(k, v)
+            # print(k, v)
             person[i][k] = eval(v)
     print(person)
 
