@@ -18,27 +18,15 @@ def curr_time():
     return(dt)
 
 
-def generate_bulk(count, generator):
-    if generator == 'mimesis':
-        _ = Field(locale=Locale.RU)
-        schema = Schema(schema=lambda: {
-            "uuid": _("uuid"),
-            "fio": _("full_name", gender=Gender.FEMALE, reverse = True) + ' ' + RussiaSpecProvider().patronymic(gender=Gender.FEMALE),
-            "phone": _("person.telephone"),
-            "age": _("person.age", minimum=18, maximum=118),
-            "address": _("address.address"),
-            "email": _("person.email", domains=["test.com"], key=str.lower)
-        })
-        res = schema.create(iterations=count)
-    else:
-        fake = Faker('ru_RU')
-        res = [{
-            "uuid": fake.uuid4(),
-            "fio": fake.name(),
-            "phone": fake.phone_number(),
-            "age": random.randint(18,118),
-            "address": fake.address(),
-            "email": fake.email()} for x in range(count)]
+def generate_bulk(count):
+    fake = Faker('ru_RU')
+    res = [{
+        "uuid": fake.uuid4(),
+        "fio": fake.name(),
+        "phone": fake.phone_number(),
+        "age": random.randint(18,118),
+        "address": fake.address(),
+        "email": fake.email()} for x in range(count)]
     return(res)
 
 
@@ -100,11 +88,6 @@ def read_env():
     else:
         PERSON_COUNT = 10
     print('%s -> PERSON_COUNT set to: %s' % (curr_time(), PERSON_COUNT), file = sys.stdout)
-    if os.getenv('NAME_OF_GENERATOR'):
-        NAME_OF_GENERATOR = os.getenv('NAME_OF_GENERATOR')
-    else:
-        NAME_OF_GENERATOR = 'mimesis'
-    print('%s -> NAME_OF_GENERATOR set to: %s' % (curr_time(), NAME_OF_GENERATOR), file = sys.stdout)
     if os.getenv('OUTPUT_FILE_NAME'):
         OUTPUT_FILE_NAME = os.getenv('OUTPUT_FILE_NAME')
     else:
@@ -115,11 +98,11 @@ def read_env():
     else:
         USE_JSON_INPUT = False
     print('%s -> USE_JSON_INPUT set to: %s' % (curr_time(), USE_JSON_INPUT), file = sys.stdout)
-    return(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT)
+    return(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT)
 
 
-def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT):
-    persons = generate_bulk(PERSON_COUNT, NAME_OF_GENERATOR)
+def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
+    persons = generate_bulk(PERSON_COUNT)
     headers = get_header_fields_name()
     # headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     save_data_to_csv(headers, persons)
@@ -127,12 +110,11 @@ def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT):
 
 
 def main():
-    PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT = read_env()
+    PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT = read_env()
     print('%s -> Start work' % curr_time(), file = sys.stdout)
-    print('%s -> Selected generator: %s' % (curr_time(), NAME_OF_GENERATOR), file = sys.stderr)
     try:
         print('%s -> Run main function' % curr_time(), file = sys.stdout)
-        actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT)
+        actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT)
     except Exception as e:
         print('%s -> Unable to execute Actions. Error: %s' % (curr_time(), e), file = sys.stdout)
 

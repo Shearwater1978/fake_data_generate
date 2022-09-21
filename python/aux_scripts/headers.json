@@ -8,5 +8,13 @@
     "key4": "age",
     "key5": "address",
     "key6": "email"
+  },
+  "values": {
+    "val1": "fake.uuid4()",
+    "val2": "fake.name()",
+    "val3": "fake.phone_number()",
+    "val4": "random.randint(18,118)",
+    "val5": "fake.address()",
+    "val6": "fake.email()"
   }
 }
