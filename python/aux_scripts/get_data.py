@@ -30,7 +30,7 @@ def generate_bulk(count):
     fields_name = get_header_fields_name('headers')
     values_type = get_header_fields_name('fields')
     print(fields_name)
-    print(values_type)
+    print(json.dumps(values_type))
     res = [fields for x in range(count)]
     return(res)
 
