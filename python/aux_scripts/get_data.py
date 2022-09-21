@@ -27,6 +27,8 @@ def generate_bulk(count):
         "age": random.randint(18,118),
         "address": fake.address(),
         "email": fake.email()}
+    fields_name = get_header_fields_name('headers')
+    print(fields_name)
     res = [fields for x in range(count)]
     return(res)
 
@@ -53,10 +55,14 @@ def save_data_to_csv(*args):
     f.close()
 
 
-def read_headers_json(headers_json_file_name):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
-    # headers = ['uuid_json', 'fio_json', 'phone_json', 'age_json', 'address_json', 'email_json']
-    headers = []
+def read_headers_json(headers_json_file_name, mode):
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    if mode == 'headers':
+        headers = []
+    elif mode == 'types':
+        types = {}
+    else:
+        print('%s -> Wrong mode. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
     with open(headers_json_file_name) as json_file:
         data = json.load(json_file)
         for count, item in enumerate(data['headers'], start=1):
@@ -68,17 +74,32 @@ def read_headers_json(headers_json_file_name):
     return headers
 
 
-def get_header_fields_name():
+def get_header_fields_name(mode):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
     headers_json_file_name = 'headers.json'
-    try:
-        os.path.isfile(headers_json_file_name)
-        READ_HEADERS_JSON = True
-        headers = read_headers_json(headers_json_file_name)
-    except:
-        headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
-    return headers
-        
+    if mode == 'headers':
+        try:
+            os.path.isfile(headers_json_file_name)
+            READ_HEADERS_JSON = True
+            res = read_headers_json(headers_json_file_name, mode)
+        except:
+            res = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    else:
+        try:
+            os.path.isfile(headers_json_file_name)
+            READ_HEADERS_JSON = True
+            res = read_headers_json(headers_json_file_name, mode)
+        except:
+            res = {
+                    "val1": "fake.uuid4()",
+                    "val2": "fake.name()",
+                    "val3": "fake.phone_number()",
+                    "val4": "random.randint(18,118)",
+                    "val5": "fake.address()",
+                    "val6": "fake.email()"
+                }
+    return res
+
 
 def read_env():
     if os.getenv('PERSON_COUNT'):
@@ -104,8 +125,8 @@ def read_env():
 
 def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
     persons = generate_bulk(PERSON_COUNT)
-    headers = get_header_fields_name()
-    # headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    headers = get_header_fields_name('headers')
+    values = get_header_fields_name('values')
     save_data_to_csv(headers, persons)
     print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
