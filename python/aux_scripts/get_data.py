@@ -28,7 +28,9 @@ def generate_bulk(count):
         "address": fake.address(),
         "email": fake.email()}
     fields_name = get_header_fields_name('headers')
+    values_type = get_header_fields_name('fields')
     print(fields_name)
+    print(values_type)
     res = [fields for x in range(count)]
     return(res)
 
@@ -56,48 +58,54 @@ def save_data_to_csv(*args):
 
 
 def read_headers_json(headers_json_file_name, mode):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    print('%s -> Called function: >%s< in mode: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name, mode), file = sys.stdout)  
     if mode == 'headers':
-        headers = []
-    elif mode == 'types':
-        types = {}
+        res = []
+    elif mode == 'fields':
+        res = {}
     else:
         print('%s -> Wrong mode. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
     with open(headers_json_file_name) as json_file:
         data = json.load(json_file)
-        for count, item in enumerate(data['headers'], start=1):
-            keyIdx = f'key{count}'.format(count)
-            try:
-                headers.append(data['headers'][keyIdx])
-            except Exception as e:
-                print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
-    return headers
+        if mode == 'headers':
+            for count, item in enumerate(data['headers'], start=1):
+                keyIdx = f'key{count}'.format(count)
+                try:
+                    res.append(data['headers'][keyIdx])
+                except Exception as e:
+                    print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
+        else:
+            print('%s -> Triggered ELSE section' % (curr_time()), file = sys.stdout)
+            for count, item in enumerate(data['fields'], start=1):
+                keyIdx = f'key{count}'.format(count)
+                dict_key = data['fields'][keyIdx]['name']
+                dict_value = data['fields'][keyIdx]['type']
+                res[f'{dict_key}'.format(dict_key)] = dict_value.replace("'", "")
+                # print('%s -> Dict item is: %s' % (curr_time(), dict_key), file = sys.stdout)
+                # print(res)
+    return res
 
 
 def get_header_fields_name(mode):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
     headers_json_file_name = 'headers.json'
     if mode == 'headers':
+        print('%s -> Called mode: >%s<' % (curr_time(), mode), file = sys.stdout)
         try:
             os.path.isfile(headers_json_file_name)
             READ_HEADERS_JSON = True
             res = read_headers_json(headers_json_file_name, mode)
-        except:
+        except Exception as e:
+            print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
             res = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     else:
+        print('%s -> Called mode: >%s<' % (curr_time(), mode), file = sys.stdout)
         try:
             os.path.isfile(headers_json_file_name)
             READ_HEADERS_JSON = True
             res = read_headers_json(headers_json_file_name, mode)
-        except:
-            res = {
-                    "val1": "fake.uuid4()",
-                    "val2": "fake.name()",
-                    "val3": "fake.phone_number()",
-                    "val4": "random.randint(18,118)",
-                    "val5": "fake.address()",
-                    "val6": "fake.email()"
-                }
+        except Exception as e:
+            print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
     return res
 
 
@@ -125,9 +133,9 @@ def read_env():
 
 def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
     persons = generate_bulk(PERSON_COUNT)
-    headers = get_header_fields_name('headers')
-    values = get_header_fields_name('values')
-    save_data_to_csv(headers, persons)
+    # headers = get_header_fields_name('headers')
+    # values = get_header_fields_name('values')
+    # save_data_to_csv(headers, persons)
     print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 
