@@ -66,14 +66,16 @@ def save_data_to_csv(*args):
 
 def read_headers_json(headers_json_file_name):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
-    headers = ['uuid_json', 'fio_json', 'phone_json', 'age_json', 'address_json', 'email_json']
+    # headers = ['uuid_json', 'fio_json', 'phone_json', 'age_json', 'address_json', 'email_json']
+    headers = []
     with open(headers_json_file_name) as json_file:
         data = json.load(json_file)
-        for count, item in enumerate(data['headers']):
-            keyIdx = 'key' + count
-            print(item)
-            print('aaa')
-            print('%s -> keyIdx: >%s<' % (curr_time(), keyIdx), file = sys.stdout)
+        for count, item in enumerate(data['headers'], start=1):
+            keyIdx = f'key{count}'.format(count)
+            try:
+                headers.append(data['headers'][keyIdx])
+            except Exception as e:
+                print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
     return headers
 
 
@@ -118,8 +120,8 @@ def read_env():
 
 def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT):
     persons = generate_bulk(PERSON_COUNT, NAME_OF_GENERATOR)
-    print(get_header_fields_name())
-    headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    headers = get_header_fields_name()
+    # headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     save_data_to_csv(headers, persons)
     print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
