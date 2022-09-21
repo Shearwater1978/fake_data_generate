@@ -64,6 +64,30 @@ def save_data_to_csv(*args):
     f.close()
 
 
+def read_headers_json(headers_json_file_name):
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    headers = ['uuid_json', 'fio_json', 'phone_json', 'age_json', 'address_json', 'email_json']
+    with open(headers_json_file_name) as json_file:
+        data = json.load(json_file)
+        for count, item in enumerate(data['headers']):
+            keyIdx = 'key' + count
+            print(item)
+            print('aaa')
+    return headers
+
+
+def get_header_fields_name():
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    headers_json_file_name = 'headers.json'
+    try:
+        os.path.isfile(headers_json_file_name)
+        READ_HEADERS_JSON = True
+        headers = read_headers_json(headers_json_file_name)
+    except:
+        headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    return headers
+        
+
 def read_env():
     if os.getenv('PERSON_COUNT'):
         try:
@@ -83,23 +107,29 @@ def read_env():
     else:
         OUTPUT_FILE_NAME = 'default.csv'
     print('%s -> OUTPUT_FILE_NAME set to: %s' % (curr_time(), OUTPUT_FILE_NAME), file = sys.stdout)
-    return(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME)
+    if os.getenv('USE_JSON_INPUT'):
+        USE_JSON_INPUT = True
+    else:
+        USE_JSON_INPUT = False
+    print('%s -> USE_JSON_INPUT set to: %s' % (curr_time(), USE_JSON_INPUT), file = sys.stdout)
+    return(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT)
 
 
-def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME):
+def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT):
     persons = generate_bulk(PERSON_COUNT, NAME_OF_GENERATOR)
+    print(get_header_fields_name())
     headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     save_data_to_csv(headers, persons)
     print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 
 def main():
-    PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME = read_env()
+    PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT = read_env()
     print('%s -> Start work' % curr_time(), file = sys.stdout)
     print('%s -> Selected generator: %s' % (curr_time(), NAME_OF_GENERATOR), file = sys.stderr)
     try:
         print('%s -> Run main function' % curr_time(), file = sys.stdout)
-        actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME)
+        actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME, USE_JSON_INPUT)
     except Exception as e:
         print('%s -> Unable to execute Actions. Error: %s' % (curr_time(), e), file = sys.stdout)
 
