@@ -73,6 +73,7 @@ def read_headers_json(headers_json_file_name):
             keyIdx = 'key' + count
             print(item)
             print('aaa')
+            print('%s -> keyIdx: >%s<' % (curr_time(), keyIdx), file = sys.stdout)
     return headers
 
 
