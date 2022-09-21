@@ -18,10 +18,22 @@ def curr_time():
     return(dt)
 
 
-def generate_bulk(count):
+def generate_bulk(count, locale):
+    """
+        List of explicitly supported locales:
+            - ru_RU
+            - pl_PL
+            - en_US
+            - en_GB
+            - fr_FR
+            - ja_JP
+        Another locale must be checked by user. Full list of available locales 
+        can be reached with URL: https://faker.readthedocs.io/en/master/locales.html
+        If needed locale is working without error, you should update list supportedLocale to be added locale in supported
+    """
     print('%s -> Called function: >%s_new<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
     person = {}
-    fake = Faker('ru_RU')
+    fake = Faker(locale)
     values_type = get_header_fields_name('fields')
     for i in range(0, count):
         person[i] = {}
@@ -76,8 +88,6 @@ def read_headers_json(headers_json_file_name, mode):
                 dict_key = data['fields'][keyIdx]['name']
                 dict_value = data['fields'][keyIdx]['type']
                 res[f'{dict_key}'.format(dict_key)] = dict_value.replace("'", "")
-                # print('%s -> Dict item is: %s' % (curr_time(), dict_key), file = sys.stdout)
-                # print(res)
     return res
 
 
@@ -105,6 +115,13 @@ def get_header_fields_name(mode):
 
 
 def read_env():
+    supportedLocale = [ 'ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP' ]
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    if os.getenv('LOCALE') in supportedLocale:
+        LOCALE = os.getenv('LOCALE')
+    else:
+        LOCALE = 'ru_RU'
+    print('%s -> LOCALE set to: %s' % (curr_time(), LOCALE), file = sys.stdout)
     if os.getenv('PERSON_COUNT'):
         try:
             PERSON_COUNT = int(os.getenv('PERSON_COUNT'))
@@ -123,11 +140,11 @@ def read_env():
     else:
         USE_JSON_INPUT = False
     print('%s -> USE_JSON_INPUT set to: %s' % (curr_time(), USE_JSON_INPUT), file = sys.stdout)
-    return(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT)
+    return(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE)
 
 
-def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
-    persons = generate_bulk(PERSON_COUNT)
+def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
+    persons = generate_bulk(PERSON_COUNT, LOCALE)
     # headers = get_header_fields_name('headers')
     # values = get_header_fields_name('values')
     # save_data_to_csv(headers, persons)
@@ -136,11 +153,11 @@ def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
 
 
 def main():
-    PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT = read_env()
+    PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE = read_env()
     print('%s -> Start work' % curr_time(), file = sys.stdout)
     try:
         print('%s -> Run main function' % curr_time(), file = sys.stdout)
-        actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT)
+        actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE)
     except Exception as e:
         print('%s -> Unable to execute Actions. Error: %s' % (curr_time(), e), file = sys.stdout)
 
