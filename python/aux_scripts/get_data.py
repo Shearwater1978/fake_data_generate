@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 from faker import Faker
 import csv
+import random
 
 
 def curr_time():
@@ -68,21 +69,28 @@ def read_env():
         try:
             PERSON_COUNT = int(os.getenv('PERSON_COUNT'))
         except:
-            print('%s -> PERSON_COUNT is set but value is not number. Used default value - 10' % curr_time(), file = sys.stdout)
             PERSON_COUNT = 10
     else:
-        print('%s -> PERSON_COUNT not found as env varibale. Used default value - 10' % curr_time(), file = sys.stdout)
         PERSON_COUNT = 10
+    print('%s -> PERSON_COUNT set to: %s' % (curr_time(), PERSON_COUNT), file = sys.stdout)
     if os.getenv('NAME_OF_GENERATOR'):
         NAME_OF_GENERATOR = os.getenv('NAME_OF_GENERATOR')
     else:
         NAME_OF_GENERATOR = 'mimesis'
+    print('%s -> NAME_OF_GENERATOR set to: %s' % (curr_time(), NAME_OF_GENERATOR), file = sys.stdout)
     if os.getenv('OUTPUT_FILE_NAME'):
-        try:
-            OUTPUT_FILE_NAME = os.getenv('OUTPUT_FILE_NAME')
-        except:
-            OUTPUT_FILE_NAME = 'default.csv'
+        OUTPUT_FILE_NAME = os.getenv('OUTPUT_FILE_NAME')
+    else:
+        OUTPUT_FILE_NAME = 'default.csv'
+    print('%s -> OUTPUT_FILE_NAME set to: %s' % (curr_time(), OUTPUT_FILE_NAME), file = sys.stdout)
     return(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME)
+
+
+def actions(PERSON_COUNT, NAME_OF_GENERATOR, OUTPUT_FILE_NAME):
+    persons = generate_bulk(PERSON_COUNT, NAME_OF_GENERATOR)
+    headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    save_data_to_csv(headers, persons)
+    print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 
 def main():
