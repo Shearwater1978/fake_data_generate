@@ -18,7 +18,7 @@ def curr_time():
     return(dt)
 
 
-def generate_bulk(count):
+def generate_bulk_old(count):
     fake = Faker('ru_RU')
     fields = {
         "uuid": fake.uuid4(),
@@ -31,8 +31,23 @@ def generate_bulk(count):
     values_type = get_header_fields_name('fields')
     print(fields_name)
     print(json.dumps(values_type))
-    res = [fields for x in range(count)]
+    res = [json.dumps(values_type) for x in range(count)]
+    print(res)
     return(res)
+
+
+def generate_bulk(count):
+    print('%s -> Called function: >%s_new<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    person = {}
+    fake = Faker('ru_RU')
+    values_type = get_header_fields_name('fields')
+    for i in range(0, count):
+        person[i] = {}
+        for k, v in values_type.items():
+            key = str(k)
+            print(k, v)
+            person[i][k] = eval(v)
+    print(person)
 
 
 def save_data_to_csv(*args):
