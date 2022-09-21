@@ -45,7 +45,7 @@ def generate_bulk(count):
         person[i] = {}
         for k, v in values_type.items():
             person[i][k] = eval(v)
-    print(person)
+    return person
 
 
 def save_data_to_csv(*args):
@@ -149,6 +149,7 @@ def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT):
     # headers = get_header_fields_name('headers')
     # values = get_header_fields_name('values')
     # save_data_to_csv(headers, persons)
+    print(persons)
     print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 

@@ -26,6 +26,10 @@
     "key6": {
       "name": "email",
       "type": "fake.email()"
+    },
+    "key7": {
+      "name": "job",
+      "type": "fake.job()"
     }
   }
 }
