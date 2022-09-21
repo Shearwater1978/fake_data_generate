@@ -20,13 +20,14 @@ def curr_time():
 
 def generate_bulk(count):
     fake = Faker('ru_RU')
-    res = [{
+    fields = {
         "uuid": fake.uuid4(),
         "fio": fake.name(),
         "phone": fake.phone_number(),
         "age": random.randint(18,118),
         "address": fake.address(),
-        "email": fake.email()} for x in range(count)]
+        "email": fake.email()}
+    res = [fields for x in range(count)]
     return(res)
 
 
