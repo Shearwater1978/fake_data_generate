@@ -98,7 +98,6 @@ def read_headers_json(headers_json_file_name, mode):
                 dict_key = data['fields'][keyIdx]['name']
                 dict_value = data['fields'][keyIdx]['type']
                 res[f'{dict_key}'.format(dict_key)] = dict_value.replace("'", "")
-    print('%s -> Get fields name: %s' % (curr_time(), res), file = sys.stdout)    
     return res
 
 
@@ -119,7 +118,6 @@ def get_header_fields_name(mode, json_file):
             res = read_headers_json(headers_json_file_name, mode)
         except Exception as e:
             print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
-    print('%s -> Get fields name: %s' % (curr_time(), res), file = sys.stdout)    
     return res
 
 
