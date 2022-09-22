@@ -1,8 +1,3 @@
-from mimesis.enums import Gender
-from mimesis.locales import Locale
-from mimesis.schema import Field, Schema
-from mimesis.builtins import RussiaSpecProvider
-from mimesis import Address
 import os
 import sys
 import json
