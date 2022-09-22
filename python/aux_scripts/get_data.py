@@ -58,23 +58,16 @@ def save_data_to_csv(*args):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
     headers = args[0]
     records = args[1]
-    print(headers, records)
-    # data = []
-    # for item in range(0, len(records)):
-    #     uuid = records[item]['uuid']
-    #     fio = records[item]['fio']
-    #     phone = records[item]['phone']
-    #     age = records[item]['age']
-    #     address = records[item]['address']
-    #     email = records[item]['email']
-    #     data.append(['%s' % uuid, '%s' % fio, '%s' % phone, '%s' % age, '%s' % address, '%s' % email])
-    # with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
-    #     writer = csv.writer(f)
-    #     # write the headers
-    #     writer.writerow(headers)
-    #     # write the data
-    #     writer.writerows(data)
-    # f.close()
+    data = []
+    for k, v in records.items():
+        data.append(list(v.values()))
+    with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
+        writer = csv.writer(f)
+        # write the headers
+        writer.writerow(headers)
+        # write the data
+        writer.writerows(data)
+    f.close()
 
 
 def read_headers_json(headers_json_file_name, mode):
