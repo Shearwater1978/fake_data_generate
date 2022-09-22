@@ -43,6 +43,7 @@ def generate_bulk(count, locale, json_file):
 
 
 def get_cvs_headers_name(json_file):
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
     res = []
     with open('headers.json') as json_file:
         data = json.load(json_file)
@@ -50,34 +51,34 @@ def get_cvs_headers_name(json_file):
             keyIdx = f'key{count}'.format(count)
             dict_key = data['fields'][keyIdx]['name']
             res.append(f'{dict_key}'.format(dict_key))
-    print(res)
+    return(res)
 
 
 def save_data_to_csv(*args):
-    #headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
     headers = args[0]
     records = args[1]
     print(headers, records)
-    data = []
-    for item in range(0, len(records)):
-        uuid = records[item]['uuid']
-        fio = records[item]['fio']
-        phone = records[item]['phone']
-        age = records[item]['age']
-        address = records[item]['address']
-        email = records[item]['email']
-        data.append(['%s' % uuid, '%s' % fio, '%s' % phone, '%s' % age, '%s' % address, '%s' % email])
-    with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
-        # write the headers
-        writer.writerow(headers)
-        # write the data
-        writer.writerows(data)
-    f.close()
+    # data = []
+    # for item in range(0, len(records)):
+    #     uuid = records[item]['uuid']
+    #     fio = records[item]['fio']
+    #     phone = records[item]['phone']
+    #     age = records[item]['age']
+    #     address = records[item]['address']
+    #     email = records[item]['email']
+    #     data.append(['%s' % uuid, '%s' % fio, '%s' % phone, '%s' % age, '%s' % address, '%s' % email])
+    # with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
+    #     writer = csv.writer(f)
+    #     # write the headers
+    #     writer.writerow(headers)
+    #     # write the data
+    #     writer.writerows(data)
+    # f.close()
 
 
 def read_headers_json(headers_json_file_name, mode):
-    print('%s -> Called function: >%s< in mode: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name, mode), file = sys.stdout)  
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
     if mode == 'headers':
         res = []
     else:
@@ -92,7 +93,6 @@ def read_headers_json(headers_json_file_name, mode):
                 except Exception as e:
                     print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
         else:
-            print('%s -> Triggered ELSE section if function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
             for count, item in enumerate(data['fields'], start=1):
                 keyIdx = f'key{count}'.format(count)
                 dict_key = data['fields'][keyIdx]['name']
@@ -103,7 +103,6 @@ def read_headers_json(headers_json_file_name, mode):
 
 def get_header_fields_name(mode, json_file):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
-    # headers_json_file_name = 'headers.json'
     headers_json_file_name = json_file
     if mode == 'headers':
         try:
