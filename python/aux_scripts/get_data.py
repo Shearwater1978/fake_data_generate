@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 from faker import Faker
 import csv
-import random
+# import random
 
 
 def curr_time():
