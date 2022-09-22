@@ -18,7 +18,7 @@ def curr_time():
     return(dt)
 
 
-def generate_bulk(count, locale):
+def generate_bulk(count, locale, json_file):
     """
         List of explicitly supported locales:
             - ru_RU
@@ -31,10 +31,10 @@ def generate_bulk(count, locale):
         can be reached with URL: https://faker.readthedocs.io/en/master/locales.html
         If needed locale is working without error, you should update list supportedLocale to be added locale in supported
     """
-    print('%s -> Called function: >%s_new<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
     person = {}
     fake = Faker(locale)
-    values_type = get_header_fields_name('fields')
+    values_type = get_header_fields_name('fields', json_file)
     for i in range(0, count):
         person[i] = {}
         for k, v in values_type.items():
@@ -42,10 +42,22 @@ def generate_bulk(count, locale):
     return person
 
 
+def get_cvs_headers_name(json_file):
+    res = []
+    with open('headers.json') as json_file:
+        data = json.load(json_file)
+        for count, item in enumerate(data['fields'], start=1):
+            keyIdx = f'key{count}'.format(count)
+            dict_key = data['fields'][keyIdx]['name']
+            res.append(f'{dict_key}'.format(dict_key))
+    print(res)
+
+
 def save_data_to_csv(*args):
     #headers = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     headers = args[0]
     records = args[1]
+    print(headers, records)
     data = []
     for item in range(0, len(records)):
         uuid = records[item]['uuid']
@@ -68,10 +80,8 @@ def read_headers_json(headers_json_file_name, mode):
     print('%s -> Called function: >%s< in mode: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name, mode), file = sys.stdout)  
     if mode == 'headers':
         res = []
-    elif mode == 'fields':
-        res = {}
     else:
-        print('%s -> Wrong mode. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
+        res = {}
     with open(headers_json_file_name) as json_file:
         data = json.load(json_file)
         if mode == 'headers':
@@ -82,41 +92,40 @@ def read_headers_json(headers_json_file_name, mode):
                 except Exception as e:
                     print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
         else:
-            print('%s -> Triggered ELSE section' % (curr_time()), file = sys.stdout)
+            print('%s -> Triggered ELSE section if function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
             for count, item in enumerate(data['fields'], start=1):
                 keyIdx = f'key{count}'.format(count)
                 dict_key = data['fields'][keyIdx]['name']
                 dict_value = data['fields'][keyIdx]['type']
                 res[f'{dict_key}'.format(dict_key)] = dict_value.replace("'", "")
+    print('%s -> Get fields name: %s' % (curr_time(), res), file = sys.stdout)    
     return res
 
 
-def get_header_fields_name(mode):
+def get_header_fields_name(mode, json_file):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
-    headers_json_file_name = 'headers.json'
+    # headers_json_file_name = 'headers.json'
+    headers_json_file_name = json_file
     if mode == 'headers':
-        print('%s -> Called mode: >%s<' % (curr_time(), mode), file = sys.stdout)
         try:
             os.path.isfile(headers_json_file_name)
-            READ_HEADERS_JSON = True
             res = read_headers_json(headers_json_file_name, mode)
         except Exception as e:
             print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
             res = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     else:
-        print('%s -> Called mode: >%s<' % (curr_time(), mode), file = sys.stdout)
         try:
             os.path.isfile(headers_json_file_name)
-            READ_HEADERS_JSON = True
             res = read_headers_json(headers_json_file_name, mode)
         except Exception as e:
             print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
+    print('%s -> Get fields name: %s' % (curr_time(), res), file = sys.stdout)    
     return res
 
 
 def read_env():
-    supportedLocale = [ 'ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP' ]
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    supportedLocale = [ 'ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP' ]
     if os.getenv('LOCALE') in supportedLocale:
         LOCALE = os.getenv('LOCALE')
     else:
@@ -144,23 +153,26 @@ def read_env():
 
 
 def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
-    persons = generate_bulk(PERSON_COUNT, LOCALE)
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    json_file = 'headers.json'
+    persons = generate_bulk(PERSON_COUNT, LOCALE, json_file)
     # headers = get_header_fields_name('headers')
     # values = get_header_fields_name('values')
-    # save_data_to_csv(headers, persons)
-    print(persons)
-    print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
+    headers = get_cvs_headers_name(json_file)
+    save_data_to_csv(headers, persons)
+    # print(persons)
+    # print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 
 def main():
+    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
     PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE = read_env()
-    print('%s -> Start work' % curr_time(), file = sys.stdout)
     try:
-        print('%s -> Run main function' % curr_time(), file = sys.stdout)
         actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE)
     except Exception as e:
         print('%s -> Unable to execute Actions. Error: %s' % (curr_time(), e), file = sys.stdout)
 
 
 if __name__ == '__main__':
+    print('%s -> Start work' % curr_time(), file = sys.stdout)
     main()
