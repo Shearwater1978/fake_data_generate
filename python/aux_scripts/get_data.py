@@ -156,8 +156,6 @@ def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
     print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
     json_file = 'headers.json'
     persons = generate_bulk(PERSON_COUNT, LOCALE, json_file)
-    # headers = get_header_fields_name('headers')
-    # values = get_header_fields_name('values')
     headers = get_cvs_headers_name(json_file)
     save_data_to_csv(headers, persons)
     # print(persons)
