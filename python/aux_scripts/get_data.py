@@ -62,7 +62,7 @@ def save_data_to_csv(*args):
     for k, v in records.items():
         data.append(list(v.values()))
     with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, delimiter =';')
         # write the headers
         writer.writerow(headers)
         # write the data
@@ -148,8 +148,6 @@ def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
     persons = generate_bulk(PERSON_COUNT, LOCALE, json_file)
     headers = get_cvs_headers_name(json_file)
     save_data_to_csv(headers, persons)
-    # print(persons)
-    # print('%s -> Output record(-s) saved to file' % curr_time(), file = sys.stdout)
 
 
 def main():
