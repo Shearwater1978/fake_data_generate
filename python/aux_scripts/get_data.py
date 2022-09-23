@@ -5,40 +5,48 @@ from datetime import datetime
 import time
 from faker import Faker
 import csv
-# import random
+import random
+import logging
+
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 
 def curr_time():
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     dt = datetime.now().strftime("%H:%M:%S.%f")[:-4]
     return(dt)
 
 
-def generate_bulk(count, locale, json_file):
+def generate_bulk(count, locale, json_file, debug=0):
     """
-        List of explicitly supported locales:
-            - ru_RU
-            - pl_PL
-            - en_US
-            - en_GB
-            - fr_FR
-            - ja_JP
-        Another locale must be checked by user. Full list of available locales 
-        can be reached with URL: https://faker.readthedocs.io/en/master/locales.html
-        If needed locale is working without error, you should update list supportedLocale to be added locale in supported
+    List of explicitly supported locales:
+        - ru_RU
+        - pl_PL
+        - en_US
+        - en_GB
+        - fr_FR
+        - ja_JP
+    Another locale must be checked by user. Full list of available locales 
+    can be reached with URL: https://faker.readthedocs.io/en/master/locales.html
+    If needed locale is working without error, you should update list supportedLocale to be added locale in supported
     """
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     person = {}
     fake = Faker(locale)
     values_type = get_header_fields_name('fields', json_file)
-    for i in range(0, count):
-        person[i] = {}
-        for k, v in values_type.items():
-            person[i][k] = eval(v)
+    try:
+        for i in range(0, count):
+            person[i] = {}
+            for k, v in values_type.items():
+                person[i][k] = eval(v)
+    except Exception as e:
+        logging.error("Something wrong in function {message}. Error message {error}".format(message=sys._getframe(0).f_code.co_name, error=e))
     return person
 
 
 def get_cvs_headers_name(json_file):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     res = []
     with open('headers.json') as json_file:
         data = json.load(json_file)
@@ -50,7 +58,7 @@ def get_cvs_headers_name(json_file):
 
 
 def save_data_to_csv(*args):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name)) 
     headers = args[0]
     records = args[1]
     data = []
@@ -66,7 +74,7 @@ def save_data_to_csv(*args):
 
 
 def read_headers_json(headers_json_file_name, mode):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)  
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     if mode == 'headers':
         res = []
     else:
@@ -90,32 +98,32 @@ def read_headers_json(headers_json_file_name, mode):
 
 
 def get_header_fields_name(mode, json_file):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     headers_json_file_name = json_file
     if mode == 'headers':
         try:
             os.path.isfile(headers_json_file_name)
             res = read_headers_json(headers_json_file_name, mode)
         except Exception as e:
-            print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
+            print('%s -> Unable to execute get_header_fields_name in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
             res = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     else:
         try:
             os.path.isfile(headers_json_file_name)
             res = read_headers_json(headers_json_file_name, mode)
         except Exception as e:
-            print('%s -> Unable to execute Actions in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
+            print('%s -> Unable to execute get_header_fields_name in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
     return res
 
 
 def read_env():
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     supportedLocale = [ 'ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP' ]
     if os.getenv('LOCALE') in supportedLocale:
         LOCALE = os.getenv('LOCALE')
     else:
         LOCALE = 'ru_RU'
-    print('%s -> LOCALE set to: %s' % (curr_time(), LOCALE), file = sys.stdout)
+    logging.info("Env variable LOCALE set to: {message}".format(message=LOCALE))
     if os.getenv('PERSON_COUNT'):
         try:
             PERSON_COUNT = int(os.getenv('PERSON_COUNT'))
@@ -123,22 +131,22 @@ def read_env():
             PERSON_COUNT = 10
     else:
         PERSON_COUNT = 10
-    print('%s -> PERSON_COUNT set to: %s' % (curr_time(), PERSON_COUNT), file = sys.stdout)
+    logging.info("Env variable PERSON_COUNT set to: {message}".format(message=PERSON_COUNT))
     if os.getenv('OUTPUT_FILE_NAME'):
         OUTPUT_FILE_NAME = os.getenv('OUTPUT_FILE_NAME')
     else:
         OUTPUT_FILE_NAME = 'default.csv'
-    print('%s -> OUTPUT_FILE_NAME set to: %s' % (curr_time(), OUTPUT_FILE_NAME), file = sys.stdout)
+    logging.info("Env variable OUTPUT_FILE_NAME set to: {message}".format(message=OUTPUT_FILE_NAME))
     if os.getenv('USE_JSON_INPUT'):
         USE_JSON_INPUT = True
     else:
         USE_JSON_INPUT = False
-    print('%s -> USE_JSON_INPUT set to: %s' % (curr_time(), USE_JSON_INPUT), file = sys.stdout)
+    logging.info("Env variable USE_JSON_INPUT set to: {message}".format(message=USE_JSON_INPUT))
     return(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE)
 
 
 def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     json_file = 'headers.json'
     persons = generate_bulk(PERSON_COUNT, LOCALE, json_file)
     headers = get_cvs_headers_name(json_file)
@@ -146,7 +154,7 @@ def actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE):
 
 
 def main():
-    print('%s -> Called function: >%s<' % (curr_time(), sys._getframe(0).f_code.co_name), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE = read_env()
     try:
         actions(PERSON_COUNT, OUTPUT_FILE_NAME, USE_JSON_INPUT, LOCALE)
@@ -155,5 +163,6 @@ def main():
 
 
 if __name__ == '__main__':
-    print('%s -> Start work' % curr_time(), file = sys.stdout)
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     main()
+
