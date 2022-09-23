@@ -4,7 +4,6 @@ FROM python:3.8.11-bullseye
 MAINTAINER Aleksandr uglykoyote@gmail.com
 
 ENV PERSON_COUNT=10
-ENV NAME_OF_GENERATOR=mimesis
 
 ARG USERNAME=notroot
 ARG USER_UID=1000
