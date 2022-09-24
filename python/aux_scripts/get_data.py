@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: 
 
 
 def curr_time():
-    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
+    logging.debug("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     dt = datetime.now().strftime("%H:%M:%S.%f")[:-4]
     return(dt)
 
@@ -87,7 +87,7 @@ def read_headers_json(headers_json_file_name, mode):
                 try:
                     res.append(data['headers'][keyIdx])
                 except Exception as e:
-                    print('%s -> Json file is malformed. Error message: %s. Terminating script' % (curr_time(), e), file = sys.stdout)
+                    logging.error("Json file is malformed. Error is: {message}".format(message=e))
         else:
             for count, item in enumerate(data['fields'], start=1):
                 keyIdx = f'key{count}'.format(count)
@@ -99,18 +99,17 @@ def read_headers_json(headers_json_file_name, mode):
 
 def get_header_fields_name(mode, json_file):
     logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
-    # headers_json_file_name = json_file
     if mode == 'headers':
         try:
             res = read_headers_json(json_file, mode)
         except Exception as e:
-            print('%s -> Unable to execute get_header_fields_name in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
+            logging.error("Unable to execute get_header_fields_name. Error is: {message}".format(message=e))
             res = ['uuid', 'fio', 'phone', 'age', 'address', 'email']
     else:
         try:
             res = read_headers_json(json_file, mode)
         except Exception as e:
-            print('%s -> Unable to execute get_header_fields_name in mode: %s. Error: %s' % (curr_time(), mode, e), file = sys.stdout)
+            logging.error("Unable to execute get_header_fields_name. Error is: {message}".format(message=e))
     return res
 
 
@@ -157,8 +156,8 @@ def main():
     try:
         actions(PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE)
     except Exception as e:
-        print('%s -> Unable to execute Actions. Error: %s' % (curr_time(), e), file = sys.stdout)
-
+        logging.error("Unable to execute Actions. Error: {message}".format(message=e))
+        
 
 if __name__ == '__main__':
     logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
