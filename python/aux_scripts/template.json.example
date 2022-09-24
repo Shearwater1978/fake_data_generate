@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "releaseDate": "21-09-2022",
+  "ReferenceURLtoFaker": "https://faker.readthedocs.io/en/master/", 
+  "fields": {
+    "key1": {
+      "name": "uuid",
+      "type": "fake.uuid4()"
+    },
+    "key2": {
+      "name": "fio",
+      "type": "fake.name()"
+    },
+    "key3": {
+      "name": "phone",
+      "type": "fake.phone_number()"
+    },
+    "key4": {
+      "name": "age",
+      "type": "random.randint(18,118)"
+    }
+  }
+}
