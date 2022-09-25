@@ -64,7 +64,7 @@ def save_data_to_csv(*args):
     data = []
     for k, v in records.items():
         data.append(list(v.values()))
-    with open('/tmp/persons.csv', 'w', encoding='UTF8') as f:
+    with open('/app/output/persons.csv', 'w', encoding='UTF8') as f:
         writer = csv.writer(f, delimiter =';')
         # write the headers
         writer.writerow(headers)
