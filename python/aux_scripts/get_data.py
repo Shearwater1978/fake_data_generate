@@ -27,7 +27,7 @@ def generate_bulk(count, locale, json_file):
         - en_GB
         - fr_FR
         - ja_JP
-    Another locale must be checked by user. Full list of available locales 
+    Another locale must be checked by user. Full list of available locales
     can be reached with URL: https://faker.readthedocs.io/en/master/locales.html
     If needed locale is working without error, you should update list supportedLocale to be added locale in supported
     """
@@ -58,7 +58,7 @@ def get_cvs_headers_name(json_file):
 
 
 def save_data_to_csv(*args):
-    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name)) 
+    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     headers = args[0]
     records = args[1]
     data = []
