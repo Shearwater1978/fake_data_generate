@@ -52,7 +52,7 @@ jobs:
         - docker save testimage:latest -o testimage.tar
         - ./dockle --input testimage.tar
 
-    - stage: Snyk
+    - stage: Docker
       name: Snyk
       script:
         - docker build . -f Dockerfile -t testimage:latest
