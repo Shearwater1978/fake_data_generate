@@ -54,4 +54,4 @@ jobs:
       name: Snyk
       script:
         - docker build . -f Dockerfile -t testimage:latest
-        - ./snyk monitor --docker testimage:latest
+        - ./snyk test --docker testimage:latest --file=./Dockerfile
