@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s :: %(levelname)s :: 
 def curr_time():
     logging.debug("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     dt = datetime.now().strftime("%H:%M:%S.%f")[:-4]
-    return(dt)
+    return dt
 
 
 def generate_bulk(count, locale, json_file):
@@ -54,7 +54,7 @@ def get_cvs_headers_name(json_file):
             keyIdx = f'key{count}'.format(count)
             dict_key = data['fields'][keyIdx]['name']
             res.append(f'{dict_key}'.format(dict_key))
-    return(res)
+    return res
 
 
 def save_data_to_csv(*args):
@@ -115,7 +115,7 @@ def get_header_fields_name(mode, json_file):
 
 def read_env():
     logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
-    supportedLocale = [ 'ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP' ]
+    supportedLocale = ['ru_RU', 'pl_PL', 'en_US', 'en_GB', 'fr_FR', 'ja_JP']
     if os.getenv('LOCALE') in supportedLocale:
         LOCALE = os.getenv('LOCALE')
     else:
@@ -139,7 +139,7 @@ def read_env():
     else:
         JSON_TEMPLATE_FILE = 'headers.json'
     logging.info("Env variable JSON_TEMPLATE_FILE set to: {message}".format(message=JSON_TEMPLATE_FILE))
-    return(PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE)
+    return (PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE)
 
 
 def actions(PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE):
