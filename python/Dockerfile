@@ -24,4 +24,3 @@ WORKDIR /app
 COPY ./aux_scripts/ /app/
 
 ENTRYPOINT ["/bin/bash", "docker-entrypoint.sh"]
-
