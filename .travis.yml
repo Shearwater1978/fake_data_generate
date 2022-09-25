@@ -53,7 +53,5 @@ jobs:
     - stage: Docker
       name: Snyk
       script:
-        - pwd
-        - ls -la
         - docker build . -f Dockerfile -t testimage:latest
-        - snyk monitor --docker testimage:latest
+        - ./snyk monitor --docker testimage:latest
