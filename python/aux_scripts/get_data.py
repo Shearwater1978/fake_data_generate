@@ -157,9 +157,8 @@ def main():
         actions(PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE)
     except Exception as e:
         logging.error("Unable to execute Actions. Error: {message}".format(message=e))
-        
+
 
 if __name__ == '__main__':
     logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     main()
-
