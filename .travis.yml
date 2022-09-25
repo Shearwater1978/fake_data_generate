@@ -10,7 +10,6 @@ services:
   - docker
 
 before_install:
-  - cd Python
   - export VERSION=$(wget -q -O - https://api.github.com/repos/hadolint/hadolint/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
   - wget -q https://github.com/hadolint/hadolint/releases/download/v${VERSION}/hadolint-Linux-x86_64 && chmod +x hadolint-Linux-x86_64
   - export VERSION=$(wget -q -O - https://api.github.com/repos/goodwithtech/dockle/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
