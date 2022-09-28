@@ -120,7 +120,7 @@ def read_env():
         LOCALE = os.getenv('LOCALE')
     else:
         LOCALE = 'ru_RU'
-    logging.info("Env variable LOCALE set to: {message}".format(message=LOCALE))
+    logging.debug("Env variable LOCALE set to: {message}".format(message=LOCALE))
     if os.getenv('PERSON_COUNT'):
         try:
             PERSON_COUNT = int(os.getenv('PERSON_COUNT'))
@@ -128,17 +128,17 @@ def read_env():
             PERSON_COUNT = 10
     else:
         PERSON_COUNT = 10
-    logging.info("Env variable PERSON_COUNT set to: {message}".format(message=PERSON_COUNT))
+    logging.debug("Env variable PERSON_COUNT set to: {message}".format(message=PERSON_COUNT))
     if os.getenv('OUTPUT_FILE_NAME'):
         OUTPUT_FILE_NAME = os.getenv('OUTPUT_FILE_NAME')
     else:
         OUTPUT_FILE_NAME = 'default.csv'
-    logging.info("Env variable OUTPUT_FILE_NAME set to: {message}".format(message=OUTPUT_FILE_NAME))
+    logging.debug("Env variable OUTPUT_FILE_NAME set to: {message}".format(message=OUTPUT_FILE_NAME))
     if os.getenv('JSON_TEMPLATE_FILE'):
         JSON_TEMPLATE_FILE = os.getenv('JSON_TEMPLATE_FILE')
     else:
         JSON_TEMPLATE_FILE = 'headers.json'
-    logging.info("Env variable JSON_TEMPLATE_FILE set to: {message}".format(message=JSON_TEMPLATE_FILE))
+    logging.debug("Env variable JSON_TEMPLATE_FILE set to: {message}".format(message=JSON_TEMPLATE_FILE))
     return (PERSON_COUNT, OUTPUT_FILE_NAME, JSON_TEMPLATE_FILE, LOCALE)
 
 
@@ -160,5 +160,5 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.info("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
+    logging.debug("Called function {message}".format(message=sys._getframe(0).f_code.co_name))
     main()
