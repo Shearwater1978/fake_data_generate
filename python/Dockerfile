@@ -1,4 +1,3 @@
-#FROM python:3.8
 FROM python:3.8.11-bullseye
 
 MAINTAINER Aleksandr uglykoyote@gmail.com
