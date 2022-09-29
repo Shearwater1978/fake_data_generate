@@ -21,7 +21,7 @@ jobs:
     - stage: Pytest
       name: Black
       script:
-        - pip install black==22.8.0
+        - pip install black==22.8.0 typing-extensions --upgrade
         - python -m black aux_scripts/
 
     - stage: Pytest
