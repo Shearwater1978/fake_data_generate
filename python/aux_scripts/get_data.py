@@ -15,6 +15,7 @@ logging.basicConfig(
 )
 parent_logger = logging.getLogger("parent")
 
+
 def configure_logger(logLevel):
     if logLevel == 'INFO':
         parent_logger.setLevel(logging.INFO)
