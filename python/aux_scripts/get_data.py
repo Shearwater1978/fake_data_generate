@@ -16,13 +16,12 @@ logging.basicConfig(
 parent_logger = logging.getLogger("parent")
 
 def configure_logger(logLevel):
-    match logLevel:
-        case "INFO":
-            parent_logger.setLevel(logging.INFO)
-        case "DEBUG":
-            parent_logger.setLevel(logging.DEBUG)
-        case "ERROR":
-            parent_logger.setLevel(logging.ERROR)
+    if logLevel == 'INFO':
+        parent_logger.setLevel(logging.INFO)
+    elif logLevel == 'DEBUG':
+        parent_logger.setLevel(logging.INFO)
+    elif logLevel == 'ERROR':
+        parent_logger.setLevel(logging.ERROR)
     # print(f'{logLevelSeverity}'.format(logLevelSeverity=logLevelSeverity))
     # logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(message)s')
 
