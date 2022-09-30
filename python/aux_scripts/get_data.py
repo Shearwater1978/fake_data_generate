@@ -23,8 +23,6 @@ def configure_logger(logLevel):
         parent_logger.setLevel(logging.INFO)
     elif logLevel == 'ERROR':
         parent_logger.setLevel(logging.ERROR)
-    # print(f'{logLevelSeverity}'.format(logLevelSeverity=logLevelSeverity))
-    # logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(message)s')
 
 
 def curr_time():
